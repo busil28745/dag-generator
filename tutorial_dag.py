@@ -1,4 +1,3 @@
-
 import textwrap
 from datetime import datetime, timedelta
 from airflow.providers.standard.operators.bash import BashOperator
