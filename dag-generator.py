@@ -6,10 +6,10 @@ import pandas
 ################################상수 설정하기################################
 ###########################################################################
 
-DAG_TEMPLATE = "C:/gitHub/dag-generator/tutorial_dag.py"
-FILE_DESTINATION = "C:/gitHub/dag-generator/"
-CSV_FILE = ''
-BDP_SYSTEM = 'dat'
+DAG_TEMPLATE = "./tutorial_dag.py"
+FILE_DESTINATION = "./"
+CSV_FILE = './테스트배치목록.csv'
+BDP_SYSTEM = 'data'
 BDP_USAGE = 'dev'
 
 DB_HOST = ''
@@ -42,6 +42,27 @@ def parse_dag_variable(csv_row, temp_dag_content):
     modified_content = temp_dag_content
 
     # 작업유형 분류 : 적재/관리/로그/삭제 (load/mng/log/del)
+    if csv_row.배치기능 == '적재':
+        bdp_job = 'load'
+    elif csv_row.배치기능 == '관리':
+        bdp_job = 'mng'
+    elif csv_row.배치기능 == '로그':
+        bdp_job = 'log'
+    elif csv_row.배치기능 == '삭제':
+        bdp_job = 'del'
+    else:
+        return temp_dag_content, False
+    
+    # Layer 분류
+    if 'l1' in csv_row.DB명:
+        layer = 'l1'
+    elif 'l2' in csv_row.DB명:
+        layer = 'l2'
+    elif 'l0' in csv_row.DB명:
+        layer = 'l0'
+    else:
+        return temp_dag_content, False
+
 
     # 필요한 곳 파싱하기
     modified_content = re.sub(

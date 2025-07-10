@@ -1,0 +1,5 @@
+﻿DB명,테이블명,script명,배치주기,배치시간,배치기능,DagID,JobDtl
+test_c_int_l1,DD_INT_TYPE_INFO,to_delta_script.sh,daily,0 2 * * *,적재,test_data_dev_load_delta_l1_dd_int_type_info_daily_dag,delta
+test_u_int_l1,DD_INT_CATG_INFO,to_spark_script.sh,daily,0 2 * * *,적재,test_data_dev_load_spark_l1_dd_int_catg_info_daily_dag,spark
+test_c_tag_l2,MM_SVC_CAR_INFO,to_kudu_script.sh,monthly,0 5 1 * *,관리,test_data_dev_mng_kudu_mm_svc_car_info_monthly_dag,kudu
+test_d_tag_l2,MM_SVC_CAR_INFO_HIST,to_delta_script.sh,monthly,0 5 1 * *,삭제,test_data_dev_del_delta_mm_svc_car_info_hist_monthly_dag,delta
