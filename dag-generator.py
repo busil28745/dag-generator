@@ -52,7 +52,7 @@ def parse_dag_variable(csv_row, temp_dag_content):
         bdp_job = 'del'
     else:
         return temp_dag_content, False
-    
+
     # Layer 분류
     if 'l1' in csv_row.DB명:
         layer = 'l1'
@@ -63,6 +63,11 @@ def parse_dag_variable(csv_row, temp_dag_content):
     else:
         return temp_dag_content, False
 
+    # merge_condition 파싱
+    test_pks = 'id, nm, cust_no, svc_cd'
+    s_list = [test_pk.strip() for test_pk in test_pks.split(',')]
+    merge_condition = " AND ".join(f"target.{s} = source.{s}" for s in s_list)
+    # modified_content = re.sub('"""@description"""', '"This is a Test"', temp_dag_content)
 
     # 필요한 곳 파싱하기
     modified_content = re.sub(
@@ -72,12 +77,11 @@ def parse_dag_variable(csv_row, temp_dag_content):
         )
     # modified_content = re.sub('"""@description"""', '"This is a Test"', temp_dag_content)
     # modified_content = re.sub('"""@description"""', '"This is a Test"', temp_dag_content)
-    # modified_content = re.sub('"""@description"""', '"This is a Test"', temp_dag_content)
     return modified_content, True
 
 
 def generate_dag(modified_content, copy_file_name):
-    # print('[START] generate_dag')    
+    # print('[START] generate_dag')
     try:
         with open(copy_file_name, 'w', encoding='utf-8') as file:
             file.write(modified_content)
@@ -96,7 +100,7 @@ def read_csv_file():
             print(f"[ERROR] 파일을 찾을 수 없음 : {CSV_FILE}")
         except Exception as e:
             print(f"[ERROR] {CSV_FILE} 읽는 중 오류 발생 : {e}")
-        
+
         for row in df.itertuples(index=False):
             modified_content, success_boolean = parse_dag_variable(row, temp_dag_content)
             if success_boolean:
@@ -110,22 +114,21 @@ def just_parse():
     temp_dag_content = read_file(DAG_TEMPLATE)
     row = 1
     if temp_dag_content is not None:
-        print(111111)
         modified_content = parse_dag_variable(row, temp_dag_content)
         file_name = "test.py"
         copy_file_name = FILE_DESTINATION + file_name
-        generate_dag(modified_content, copy_file_name)    
+        generate_dag(modified_content, copy_file_name)
 
 if __name__ == "__main__":
-    # read_csv_file()
+    read_csv_file()
     # just_parse()
-    test_pk = 'bas_dt, cust_no, prvd, acno'
-    s_list = test_pk.split(',')
-    merge_condtion = ''
-    for i in range(len(s_list)):
-        if i != 0:
-            merge_condtion = merge_condtion + ' AND target.' + s_list[i].strip() + ' = source.' + s_list[i].strip()
-        else:
-            merge_condtion = 'target.' + s_list[i].strip() + ' = source.' + s_list[i].strip()
-    print(merge_condtion)
+    # test_pk = 'bas_dt, cust_no, prvd, acno'
+    # s_list = test_pk.split(',')
+    # merge_condtion = ''
+    # for i in range(len(s_list)):
+    #     if i != 0:
+    #         merge_condtion = merge_condtion + ' AND target.' + s_list[i].strip() + ' = source.' + s_list[i].strip()
+    #     else:
+    #         merge_condtion = 'target.' + s_list[i].strip() + ' = source.' + s_list[i].strip()
+    # print(merge_condtion)
 
